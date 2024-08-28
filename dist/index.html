@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reporter</title>
+    <script type="module" crossorigin src="/assets/index-DvIRPo05.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-ByAzJLji.css">
+  </head>
+  <body>
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-bold mx-auto">Reporter</h1>
+        <div x-data="reportComponent">
+            <div class="flex flex-col gap-y-4">
+                <template x-for="(project, projectIndex) in reportComponent.report">
+                    <div class="border">
+                        <h3 x-text="project.title"></h3>
+                        <div class="flex flex-col gap-y-2">
+                            <template x-for="(task, taskIndex) in project.tasks">
+                                <div>
+                                    <h4 x-text="task.title + ': ' + task.hours"></h4>
+                                    <button @click.prevent="reportComponent.deleteTask(projectIndex, taskIndex)">Delete Task</button>
+                                </div>
+                            </template>
+                            <form x-data="{title: '', hours: 0}">
+                                <textarea x-model="title" type="text" placeholder="Task Name"></textarea>
+                                <input x-model="hours" type="number" placeholder="Hours">
+                                <button @click.prevent="reportComponent.addTask(projectIndex, title, hours); title=''; hours=0">Add Task</button>
+                            </form>
+                        </div>
+                        <button @click.prevent="reportComponent.deleteProject(projectIndex)">Delete Project</button>
+                    </div>
+                </template>
+                <form x-data="{title: ''}">
+                    <input x-model="title" type="text" placeholder="Project Name">
+                    <button @click.prevent="reportComponent.addProject(title); title=''">Add Project</button>
+                </form>
+            </div>
+            <pre x-html="reportComponent.stringifyReport()" class="report"></pre>
+        </div>
+    </div>
+  </body>
+</html>

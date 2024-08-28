@@ -1,4 +1,4 @@
-import Alpine from "alpinejs";
+import Alpine from "./node_modules/alpinejs/dist/module.esm";
 import reportComponent from './reports.js'
 
 window.Alpine = Alpine;

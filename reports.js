@@ -13,7 +13,7 @@ export default () => ({
             this.storeReport();
         },
         addTask: function (projectIndex, title, hours) {
-            this.report[projectIndex].tasks.push({title: title, hours: hours});
+            this.report[projectIndex].tasks.push({title: title, hours: parseFloat(hours)});
             this.storeReport();
         },
         deleteTask: function(projectIndex, taskIndex) {
@@ -28,7 +28,7 @@ export default () => ({
                 const projectIndex = index + 1;
                 return acc + projectIndex + ') ' + project.title + '\n' + project.tasks.reduce((acc, task, index) => {
                     const taskIndex = index + 1;
-                    totalHours += parseInt(task.hours);
+                    totalHours += parseFloat(task.hours);
                     return acc + '  ' + projectIndex + '.' + taskIndex + ') ' + task.title + ' - ' + task.hours + this.getHoursEnding(task.hours) + '\n';
                 }, '')
             }, '') + 'Сумарно пропрацював ' + totalHours + this.getHoursEnding(totalHours);

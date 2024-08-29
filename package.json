@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "tailwind": "npx tailwindcss -i ./input.css -o ./style.css --watch",
     "dev": "vite",
-    "build": "vite build",
+    "build": "npx tailwindcss -i ./input.css -o ./style.css && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {

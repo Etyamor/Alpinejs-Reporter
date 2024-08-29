@@ -15,11 +15,19 @@
                 <div class="flex flex-col gap-y-4">
                     <template x-for="(project, projectIndex) in reportComponent.report">
                         <div class="border p-6 space-y-4">
-                            <div class="flex justify-between items-center">
-                                <h3 x-text="project.title" class="font-semibold text-2xl"></h3>
-                                <button class="px-4 py-2 bg-red-600 text-white rounded" @click.prevent="reportComponent.deleteProject(projectIndex)">
-                                    Delete Project
-                                </button>
+                            <div x-data="{edit: false, title: project.title}" class="flex justify-between items-center">
+                                <template x-if="edit">
+                                    <input class="rounded py-2 px-4 text-2xl border border-[f0f0f0] outline-none focus-visible:shadow-none h-12" x-model="title" type="text">
+                                </template>
+                                <template x-if="!edit">
+                                    <h3 x-text="project.title" class="border-white py-2 px-4 font-semibold text-2xl"></h3>
+                                </template>
+                                <div class="space-x-2">
+                                    <button @click="edit ? (reportComponent.editProject(projectIndex, title), edit=!edit) : edit=!edit" x-text="edit ? 'Save' : 'Edit'" class="px-4 py-2 bg-amber-500 text-white rounded"></button>
+                                    <button class="px-4 py-2 bg-red-600 text-white rounded" @click.prevent="reportComponent.deleteProject(projectIndex)">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                             <div class="flex flex-col gap-y-2">
                                 <template x-for="(task, taskIndex) in project.tasks">
@@ -64,7 +72,7 @@
                         </div>
                         <div class="pl-3 w-full">
                             <div class="flex items-center justify-between">
-                                <p x-text="reportComponent.notify.message" tabindex="0" class="focus:outline-none text-sm leading-none text-green-700">Design sprint completed</p>
+                                <p x-text="reportComponent.notify.message" tabindex="0" class="focus:outline-none text-sm leading-none text-green-700"></p>
                             </div>
                         </div>
                     </div>

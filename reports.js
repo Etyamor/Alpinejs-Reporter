@@ -7,6 +7,11 @@ export default () => ({
         },
         addProject: function(title) {
             this.report.push({title: title, tasks: []});
+            this.storeReport();
+        },
+        editProject: function (index, title) {
+            this.report[index] = {title: title, tasks: this.report[index].tasks};
+            this.storeReport();
         },
         deleteProject: function (index) {
             this.report.splice(index, 1);
@@ -14,6 +19,10 @@ export default () => ({
         },
         addTask: function (projectIndex, title, hours) {
             this.report[projectIndex].tasks.push({title: title, hours: parseFloat(hours)});
+            this.storeReport();
+        },
+        editTask: function(projectIndex, taskIndex, title, hours) {
+            this.report[projectIndex].tasks[taskIndex] = {title: title, hours: parseFloat(hours)};
             this.storeReport();
         },
         deleteTask: function(projectIndex, taskIndex) {

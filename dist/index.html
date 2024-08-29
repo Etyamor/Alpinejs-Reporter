@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reporter</title>
-    <script type="module" crossorigin src="https://etyamor.github.io/Alpinejs-Reporter/assets/index-UTlmuGBr.js"></script>
-    <link rel="stylesheet" crossorigin href="https://etyamor.github.io/Alpinejs-Reporter/assets/index-BgX0a3lk.css">
+    <script type="module" crossorigin src="https://etyamor.github.io/Alpinejs-Reporter/assets/index-BsmPCd4u.js"></script>
+    <link rel="stylesheet" crossorigin href="https://etyamor.github.io/Alpinejs-Reporter/assets/index-DoZEHYa3.css">
   </head>
   <body>
     <div class="container mx-auto">
@@ -31,23 +31,33 @@
                             </div>
                             <div class="flex flex-col gap-y-2">
                                 <template x-for="(task, taskIndex) in project.tasks">
-                                    <div class="flex items-center justify-between py-2 border-b">
-                                        <h4 x-text="task.title"></h4>
+                                    <div x-data="{edit: false, title: task.title, hours: task.hours}" class="flex items-center justify-between py-2 border-b">
+                                        <template x-if="edit">
+                                            <div class="flex w-3/4 space-x-4 justify-between">
+                                                <input x-model="title" type="text" placeholder="Task Name" class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12 w-full">
+                                                <input x-model="hours" type="number" placeholder="Hours" class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12 w-20">
+                                            </div>
+                                        </template>
+                                        <template x-if="!edit">
+                                            <div class="flex w-3/4 py-1 justify-between">
+                                                <h4 class="py-2 px-4 border-white text-base" x-text="task.title"></h4>
+                                                <span class="py-2 px-4 border-white text-base" x-text="task.hours + reportComponent.getHoursEnding(task.hours)"></span>
+                                            </div>
+                                        </template>
                                         <div class="flex items-center space-x-4">
-                                            <span x-text="task.hours + reportComponent.getHoursEnding(task.hours)"></span>
-                                            <button class="w-8 h-8 bg-red-600 rounded" @click.prevent="reportComponent.deleteTask(projectIndex, taskIndex)">
-                                                <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.69231 8.70833H5V8.16667H9.84615M7.69231 8.70833V19H16.3077V8.70833M7.69231 8.70833H16.3077M16.3077 8.70833H19V8.16667H14.1538M9.84615 8.16667V6H14.1538V8.16667M9.84615 8.16667H14.1538" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M10 11V17" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M12 11V17" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M14 11V17" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg>
-                                            </button>
+                                            <div>
+                                                <button @click="edit ? (reportComponent.editTask(projectIndex, taskIndex, title, hours), edit=!edit) : edit=!edit" :class="edit ? 'bg-green-700' : 'bg-amber-500'" class="w-8 h-8 bg-amber-500 rounded">
+                                                    <img src='./svg/pen.svg' alt='Edit'>
+                                                </button>
+                                                <button class="w-8 h-8 bg-red-600 rounded" @click.prevent="reportComponent.deleteTask(projectIndex, taskIndex)">
+                                                    <img src="./svg/bin.svg" alt="Delete">
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </template>
                                 <form class="flex items-center justify-between space-x-4" x-data="{title: '', hours: 0}">
-                                    <textarea x-model="title" type="text" placeholder="Task Name" class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12 w-full"></textarea>
+                                    <input x-model="title" type="text" placeholder="Task Name" class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12 w-full">
                                     <div class="flex items-center space-x-4 shrink-0">
                                         <input x-model="hours" type="number" placeholder="Hours" class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12 w-20">
                                         <button class="rounded py-2 px-4 bg-green-700 text-white" @click.prevent="reportComponent.addTask(projectIndex, title, hours); title=''; hours=0">Add Task</button>

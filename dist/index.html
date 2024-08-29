@@ -4,39 +4,72 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reporter</title>
-    <script type="module" crossorigin src="https://etyamor.github.io/Alpinejs-Reporter/assets/index-DvIRPo05.js"></script>
-    <link rel="stylesheet" crossorigin href="https://etyamor.github.io/Alpinejs-Reporter/assets/index-ByAzJLji.css">
+    <script type="module" crossorigin src="https://etyamor.github.io/Alpinejs-Reporter/assets/index-CmrcY3O6.js"></script>
+    <link rel="stylesheet" crossorigin href="https://etyamor.github.io/Alpinejs-Reporter/assets/index-Cez8psHK.css">
   </head>
   <body>
     <div class="container mx-auto">
-        <h1 class="text-3xl font-bold mx-auto">Reporter</h1>
-        <div x-data="reportComponent">
-            <div class="flex flex-col gap-y-4">
-                <template x-for="(project, projectIndex) in reportComponent.report">
-                    <div class="border">
-                        <h3 x-text="project.title"></h3>
-                        <div class="flex flex-col gap-y-2">
-                            <template x-for="(task, taskIndex) in project.tasks">
-                                <div>
-                                    <h4 x-text="task.title + ': ' + task.hours"></h4>
-                                    <button @click.prevent="reportComponent.deleteTask(projectIndex, taskIndex)">Delete Task</button>
-                                </div>
-                            </template>
-                            <form x-data="{title: '', hours: 0}">
-                                <textarea x-model="title" type="text" placeholder="Task Name"></textarea>
-                                <input x-model="hours" type="number" placeholder="Hours">
-                                <button @click.prevent="reportComponent.addTask(projectIndex, title, hours); title=''; hours=0">Add Task</button>
-                            </form>
+        <div class="max-w-3xl mx-auto py-10 space-y-8">
+            <h1 class="text-3xl font-bold mx-auto">Reporter</h1>
+            <div x-data="reportComponent">
+                <div class="flex flex-col gap-y-4">
+                    <template x-for="(project, projectIndex) in reportComponent.report">
+                        <div class="border p-6 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h3 x-text="project.title" class="font-semibold text-2xl"></h3>
+                                <button class="px-4 py-2 bg-red-600 text-white rounded" @click.prevent="reportComponent.deleteProject(projectIndex)">
+                                    Delete Project
+                                </button>
+                            </div>
+                            <div class="flex flex-col gap-y-2">
+                                <template x-for="(task, taskIndex) in project.tasks">
+                                    <div class="flex items-center justify-between py-2 border-b">
+                                        <h4 x-text="task.title"></h4>
+                                        <div class="flex items-center space-x-4">
+                                            <span x-text="task.hours + reportComponent.getHoursEnding(task.hours)"></span>
+                                            <button class="w-8 h-8 bg-red-600 rounded" @click.prevent="reportComponent.deleteTask(projectIndex, taskIndex)">
+                                                <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.69231 8.70833H5V8.16667H9.84615M7.69231 8.70833V19H16.3077V8.70833M7.69231 8.70833H16.3077M16.3077 8.70833H19V8.16667H14.1538M9.84615 8.16667V6H14.1538V8.16667M9.84615 8.16667H14.1538" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M10 11V17" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M12 11V17" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M14 11V17" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                                <form class="flex items-center justify-between space-x-4" x-data="{title: '', hours: 0}">
+                                    <textarea x-model="title" type="text" placeholder="Task Name" class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12 w-full"></textarea>
+                                    <div class="flex items-center space-x-4 shrink-0">
+                                        <input x-model="hours" type="number" placeholder="Hours" class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12 w-20">
+                                        <button class="rounded py-2 px-4 bg-green-700 text-white" @click.prevent="reportComponent.addTask(projectIndex, title, hours); title=''; hours=0">Add Task</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <button @click.prevent="reportComponent.deleteProject(projectIndex)">Delete Project</button>
+                    </template>
+                    <form class="flex items-center space-x-4" x-data="{title: ''}">
+                        <input class="rounded py-2 px-4 text-base border border-[f0f0f0] outline-none focus-visible:shadow-none h-12" x-model="title" type="text" placeholder="Project Name">
+                        <button class="rounded py-2 px-4 bg-green-700 text-white" @click.prevent="reportComponent.addProject(title); title=''">Add Project</button>
+                    </form>
+                </div>
+                <pre class="border p-4 mt-4" x-html="reportComponent.stringifyReport()" class="report"></pre>
+                <button class="mt-4 rounded py-2 px-4 bg-lime-500 text-white" @click="reportComponent.copyToClipboard()">Copy to clipboard</button>
+                <template x-if="reportComponent.notify.show">
+                    <div class="fixed bottom-4 right-4 p-3 mt-8 bg-green-100 rounded flex items-center">
+                        <div tabindex="0" aria-label="success icon" role="img" class="focus:outline-none w-8 h-8 border rounded-full border-green-200 flex flex-shrink-0 items-center justify-center">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.66674 10.1147L12.7947 3.98599L13.7381 4.92866L6.66674 12L2.42407 7.75733L3.36674 6.81466L6.66674 10.1147Z" fill="#047857" />
+                            </svg>
+                        </div>
+                        <div class="pl-3 w-full">
+                            <div class="flex items-center justify-between">
+                                <p x-text="reportComponent.notify.message" tabindex="0" class="focus:outline-none text-sm leading-none text-green-700">Design sprint completed</p>
+                            </div>
+                        </div>
                     </div>
                 </template>
-                <form x-data="{title: ''}">
-                    <input x-model="title" type="text" placeholder="Project Name">
-                    <button @click.prevent="reportComponent.addProject(title); title=''">Add Project</button>
-                </form>
             </div>
-            <pre x-html="reportComponent.stringifyReport()" class="report"></pre>
         </div>
     </div>
   </body>
